@@ -1,8 +1,6 @@
 import {
   BadRequestException,
   ConflictException,
-  HttpException,
-  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -17,6 +15,7 @@ import * as bcrypt from 'bcrypt';
 import { verifyPasswordRules } from 'src/utils/InputRulesMethods';
 import { ILoginUser } from './types/LoginUser.interface';
 import { JwtServiceCustom } from '../Auth/JwtService';
+import { CompanyEntity } from 'src/Companies/entities/Company.entity';
 
 @Injectable()
 export class UsersService {
@@ -25,11 +24,12 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly _usersRepo: Repository<UserEntity>,
+    @InjectRepository(CompanyEntity)
+    private readonly _companiesRepo: Repository<CompanyEntity>,
   ) {}
 
   async getUserById(id: number): Promise<IUser> {
-    if (isNaN(Number(id)) || id <= 0)
-      throw new HttpException('', HttpStatus.BAD_REQUEST);
+    if (!id || isNaN(Number(id)) || id <= 0) throw new BadRequestException();
 
     const user: UserEntity | null = await this._usersRepo.findOneBy({ id });
     if (!user) throw new NotFoundException();
@@ -38,17 +38,16 @@ export class UsersService {
   }
 
   async createUser(dto: ICreateUserDto): Promise<IUser> {
-    //Verificar si el dro sigue el objeto necesario.
+    if (!dto) throw new BadRequestException();
+
     const matcher = new MatchObj(
       new MatchProperty('username', ['string']),
       new MatchProperty('email', ['string']),
       new MatchProperty('password', ['string']),
+      new MatchProperty('companyId', [1]),
     );
     const match = matcher.compare(dto, true);
-    if (!match)
-      throw new BadRequestException(
-        'Los campos deben ser diligenciados correctamente',
-      );
+    if (!match) throw new BadRequestException();
 
     //Verificar que la contraseña siga las reglas;
     if (!verifyPasswordRules(dto.password))
@@ -60,19 +59,30 @@ export class UsersService {
     const duplicated = await this._usersRepo.findOneBy({ email: dto.email });
     if (duplicated) throw new ConflictException();
 
+    const company = await this._companiesRepo.findOneBy({ id: dto.companyId });
+    if (!company) throw new NotFoundException('Empresa no encontrada');
+
     const hashedPassword = bcrypt.hashSync(dto.password, 10);
     const rawEntity = this._usersRepo.create({
       username: dto.username,
       email: dto.email,
       password: hashedPassword,
+      companies: [company],
     });
 
-    const savedEntity = await this._usersRepo.save(rawEntity);
-    const parsedUser = userEntityParser(savedEntity);
-    return parsedUser;
+    try {
+      const savedEntity = await this._usersRepo.save(rawEntity);
+      const parsedUser = userEntityParser(savedEntity);
+      return parsedUser;
+    } catch (err) {
+      console.error(err);
+      throw new BadRequestException();
+    }
   }
 
   async loginUser(dto: ILoginUser): Promise<string> {
+    if (!dto) throw new BadRequestException();
+
     const matcher = new MatchObj(
       new MatchProperty('username', ['string']),
       new MatchProperty('password', ['string']),

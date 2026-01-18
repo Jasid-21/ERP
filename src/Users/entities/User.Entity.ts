@@ -1,5 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { IUser } from '../types/User.interface';
+import { CompanyEntity } from 'src/Companies/entities/Company.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -17,6 +24,20 @@ export class UserEntity {
 
   @Column({ name: 'is_email_verified' })
   isEmailVerified: boolean;
+
+  @ManyToMany(() => CompanyEntity, (company) => company.users)
+  @JoinTable({
+    name: 'companies_users',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'company_id',
+      referencedColumnName: 'id',
+    },
+  })
+  companies: CompanyEntity[];
 }
 
 export function userEntityParser(

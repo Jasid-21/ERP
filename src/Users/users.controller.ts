@@ -1,12 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { IUser } from './types/User.interface';
 import { ICreateUserDto } from './types/CreateUserDto';
@@ -19,19 +11,16 @@ export class UsersController {
 
   @Get()
   async getUser(@Param('id') id: number): Promise<IUser> {
-    if (!id || typeof id != 'number') throw new BadRequestException();
     return this._usersService.getUserById(id);
   }
 
   @Post()
   async createUser(@Body() dto: ICreateUserDto): Promise<IUser> {
-    if (!dto) throw new BadRequestException();
     return this._usersService.createUser(dto);
   }
 
   @Post('login')
   async loginUser(@Body() dto: ILoginUser): Promise<string> {
-    if (!dto) throw new BadRequestException();
     return this._usersService.loginUser(dto);
   }
 

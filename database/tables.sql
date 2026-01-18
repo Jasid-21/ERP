@@ -27,7 +27,6 @@ create table users (
 	password varchar(255) not null,
 	isEmailVerified bool not null
 );
-
 alter table users rename column isemailverified to is_email_verified;
 alter table users alter column is_email_verified set default false;
 
@@ -42,8 +41,14 @@ ADD COLUMN updated_by int not null references users (id);
 alter table modules alter column updated_by drop not null;
 alter table actions alter column updated_by drop not null;
 
-insert into users (username, email, password, isEmailVerified)
+insert into users (username, email, password, is_email_verified)
 values ('system', 'system@system', 'system_password', true);
+
+ALTER TABLE users
+ADD COLUMN created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+ADD COLUMN updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+ADD COLUMN created_by int references users (id),
+ADD COLUMN updated_by int references users (id);
 
 create table roles (
 	id int not null generated always as identity primary key,
@@ -118,13 +123,8 @@ CREATE TABLE company_certificates (
 );
 
 create table companies_users (
-	company_id int not null references companies (id),
 	user_id int not null references users (id),
-	
-	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-	updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-	created_by INT NOT NULL REFERENCES users(id),
-	updated_by INT REFERENCES users(id)
+	company_id int not null references companies (id)
 );
 
 create table warehouses (
