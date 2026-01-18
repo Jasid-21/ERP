@@ -13,7 +13,7 @@ import { Repository } from 'typeorm';
 import { IUser } from './types/User.interface';
 import { ICreateUserDto } from './types/CreateUserDto';
 import { MatchObj, MatchProperty } from 'src/utils/MatchObj.class';
-import { hashSync, compareSync } from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { verifyPasswordRules } from 'src/utils/InputRulesMethods';
 import { ILoginUser } from './types/LoginUser.interface';
 import { JwtServiceCustom } from '../Auth/JwtService';
@@ -60,7 +60,7 @@ export class UsersService {
     const duplicated = await this._usersRepo.findOneBy({ email: dto.email });
     if (duplicated) throw new ConflictException();
 
-    const hashedPassword = hashSync(dto.password, 10);
+    const hashedPassword = bcrypt.hashSync(dto.password, 10);
     const rawEntity = this._usersRepo.create({
       username: dto.username,
       email: dto.email,
@@ -82,7 +82,7 @@ export class UsersService {
     const user = await this._usersRepo.findOneBy({ username: dto.username });
     if (!user) throw new UnauthorizedException();
 
-    const pwMatch = compareSync(dto.password, user.password);
+    const pwMatch = bcrypt.compareSync(dto.password, user.password);
     if (!pwMatch) throw new UnauthorizedException();
 
     return this.jwtService.sign({

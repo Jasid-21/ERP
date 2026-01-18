@@ -18,7 +18,6 @@ export class JwtServiceCustom {
    * Genera un JWT firmado
    */
   sign(payload: IJwtPayload): string {
-    console.log('Payloas', payload);
     return jwt.sign(payload, this.secret, {
       expiresIn: this.expiresIn,
     });
