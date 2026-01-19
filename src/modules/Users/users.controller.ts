@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { IUser } from './types/User.interface';
 import { ICreateUserDto } from './types/CreateUserDto';
 import { ILoginUser } from './types/LoginUser.interface';
-import { JwtAuthGuard } from 'src/Auth/AuthGuard';
+import { JwtAuthGuard } from '../Auth/AuthGuard';
 
 @Controller('users')
 export class UsersController {

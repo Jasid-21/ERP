@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IUser } from '../types/User.interface';
-import { CompanyEntity } from 'src/Companies/entities/Company.entity';
+import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {

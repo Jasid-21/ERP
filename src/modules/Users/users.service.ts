@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity, userEntityParser } from './entities/User.Entity';
+import { UserEntity, userEntityParser } from './entities/User.entity';
 import { Repository } from 'typeorm';
 import { IUser } from './types/User.interface';
 import { ICreateUserDto } from './types/CreateUserDto';
@@ -15,7 +15,7 @@ import * as bcrypt from 'bcrypt';
 import { verifyPasswordRules } from 'src/utils/InputRulesMethods';
 import { ILoginUser } from './types/LoginUser.interface';
 import { JwtServiceCustom } from '../Auth/JwtService';
-import { CompanyEntity } from 'src/Companies/entities/Company.entity';
+import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
 
 @Injectable()
 export class UsersService {

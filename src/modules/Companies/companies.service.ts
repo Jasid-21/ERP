@@ -19,11 +19,8 @@ export class CompaniesService {
     private readonly _companiesRepo: Repository<CompanyEntity>,
   ) {}
 
-  async createCompany(
-    dto: INewCompanyDto,
-    userId: number,
-  ): Promise<CompanyEntity> {
-    if (!dto || !userId) throw new BadRequestException();
+  async createCompany(dto: INewCompanyDto): Promise<CompanyEntity> {
+    if (!dto) throw new BadRequestException();
 
     const comparator = new MatchObj(
       new MatchProperty('name', ['string']),
@@ -41,7 +38,6 @@ export class CompaniesService {
       name: dto.name,
       nit: dto.nit,
       rut: dto.rut,
-      createdBy: userId,
     });
     try {
       const company = await this._companiesRepo.save(rawEntity);
@@ -52,11 +48,8 @@ export class CompaniesService {
     }
   }
 
-  async updateCompany(
-    dto: IUpdateCompanyDto,
-    userId: number,
-  ): Promise<CompanyEntity> {
-    if (!dto || !userId) throw new BadRequestException();
+  async updateCompany(dto: IUpdateCompanyDto): Promise<CompanyEntity> {
+    if (!dto) throw new BadRequestException();
 
     const comparator = new MatchObj(
       new MatchProperty('id', [1]),
@@ -67,7 +60,6 @@ export class CompaniesService {
     if (!comparator.compare(dto, true)) throw new BadRequestException();
     const result = await this._companiesRepo.update(dto.id, {
       ...removeObjectProperties(dto, ['id']),
-      updatedBy: userId,
     });
     if (result.affected === 0) throw new NotFoundException();
 

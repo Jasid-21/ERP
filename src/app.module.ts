@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './Users/users.module';
-import { CompaniesModule } from './Companies/companies.module';
+import { UsersModule } from './modules/Users/users.module';
+import { CompaniesModule } from './modules/Companies/companies.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { WarehousesModule } from './modules/warehouses/warehouses.module';
+import { AuditSubscriber } from 'database/subscribers/Audit.subscriber';
 
 @Module({
   imports: [
@@ -26,8 +28,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         database: config.get<string>('DB_NAME'),
         autoLoadEntities: true,
         synchronize: false,
+        subscribers: [AuditSubscriber],
       }),
     }),
+    WarehousesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
