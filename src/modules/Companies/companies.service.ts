@@ -27,7 +27,7 @@ export class CompaniesService {
       new MatchProperty('nit', ['string']),
       new MatchProperty('rut', ['string']),
     );
-    if (!comparator.compare(dto)) throw new BadRequestException();
+    if (!comparator.compare(dto, true)) throw new BadRequestException();
 
     const found = await this._companiesRepo.findOne({
       where: { nit: dto.nit, rut: dto.rut },
@@ -58,13 +58,12 @@ export class CompaniesService {
       new MatchProperty('rut', ['string'], false),
     );
     if (!comparator.compare(dto, true)) throw new BadRequestException();
-    const result = await this._companiesRepo.update(dto.id, {
-      ...removeObjectProperties(dto, ['id']),
-    });
-    if (result.affected === 0) throw new NotFoundException();
 
-    const updatedCompany = await this._companiesRepo.findOneBy({ id: dto.id });
-    if (!updatedCompany) throw new NotFoundException();
+    const company = await this._companiesRepo.findOneBy({ id: dto.id });
+    if (!company) throw new NotFoundException();
+
+    Object.assign(company, removeObjectProperties(dto, ['id']));
+    const updatedCompany = await this._companiesRepo.save(company);
 
     return updatedCompany;
   }

@@ -1,4 +1,11 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateWarehauseDto } from './dtos/createWarehause.dto';
 import { JwtAuthGuard } from '../Auth/AuthGuard';
 import { WarehousesService } from './warehouses.service';
@@ -11,5 +18,10 @@ export class WarehousesController {
   @UseGuards(JwtAuthGuard)
   createWarehause(@Body() dto: CreateWarehauseDto) {
     return this.warehousesService.createWarehause(dto);
+  }
+
+  @Delete(':id')
+  deleteWarehouse(@Param('id') id: number) {
+    return this.warehousesService.deleteWarehouse(Number(id));
   }
 }

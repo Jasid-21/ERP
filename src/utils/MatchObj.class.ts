@@ -6,7 +6,7 @@ export class MatchObj {
     this.properties = properties;
   }
 
-  compare(obj: Record<string, any>, exact: boolean = false): boolean {
+  compare(obj: Record<string, any>, exact: boolean = true): boolean {
     if (!obj) return false;
     const objProperties = Object.entries(obj);
     const partialMatch = this.properties.every((prop) => {

@@ -50,4 +50,11 @@ export class WarehousesService {
 
     return warehause;
   }
+
+  async deleteWarehouse(id: number) {
+    if (!id || typeof id != 'number') throw new BadRequestException();
+
+    const result = await this._warehousesRepo.delete({ id });
+    if (result.affected === 0) throw new NotFoundException();
+  }
 }

@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WarehousesModule } from './modules/warehouses/warehouses.module';
 import { AuditSubscriber } from 'database/subscribers/Audit.subscriber';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AuditSubscriber } from 'database/subscribers/Audit.subscriber';
       }),
     }),
     WarehousesModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
