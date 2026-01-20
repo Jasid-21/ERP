@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from './Entities/Product.entity';
 import { Repository } from 'typeorm';
-import { ICreateProductDto } from './dtos/CreateProduct.dto';
+import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { validate } from 'class-validator';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class ProductsService {
     private readonly _productsRepo: Repository<ProductEntity>,
   ) {}
 
-  async createProduct(dto: ICreateProductDto): Promise<ProductEntity> {
+  async createProduct(dto: CreateProductDto): Promise<ProductEntity> {
     if (!dto) throw new BadRequestException();
     const isValid = await validate(dto);
     if (isValid.length) throw new BadRequestException();

@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Put, UseGuards } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
-import { INewCompanyDto } from './types/newCompany.dto';
+import { NewCompanyDto } from './dtos/NewCompany.dto';
 import { IUpdateCompanyDto } from './types/UpdateCompany.dto';
 import { JwtAuthGuard } from '../Auth/AuthGuard';
 
@@ -10,7 +10,7 @@ export class CompaniesController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  createCompany(@Body() dto: INewCompanyDto) {
+  createCompany(@Body() dto: NewCompanyDto) {
     return this.companiesService.createCompany(dto);
   }
 

@@ -9,10 +9,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity, userEntityParser } from './entities/User.entity';
 import { Repository } from 'typeorm';
 import { IUser } from './types/User.interface';
-import { ICreateUserDto } from './types/CreateUserDto';
+import { CreateUserDto } from './dtos/CreateUserDto';
 import * as bcrypt from 'bcrypt';
 import { verifyPasswordRules } from 'src/utils/InputRulesMethods';
-import { ILoginUser } from './types/LoginUser.interface';
+import { LoginUserDto } from './dtos/LoginUser.interface';
 import { JwtServiceCustom } from '../Auth/JwtService';
 import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
 import { validate } from 'class-validator';
@@ -37,7 +37,7 @@ export class UsersService {
     return userEntityParser(user);
   }
 
-  async createUser(dto: ICreateUserDto): Promise<IUser> {
+  async createUser(dto: CreateUserDto): Promise<IUser> {
     if (!dto) throw new BadRequestException();
     if ((await validate(dto)).length) throw new BadRequestException();
 
@@ -72,7 +72,7 @@ export class UsersService {
     }
   }
 
-  async loginUser(dto: ILoginUser): Promise<string> {
+  async loginUser(dto: LoginUserDto): Promise<string> {
     if (!dto) throw new BadRequestException();
     const validation = await validate(dto);
     if (validation.length) throw new BadRequestException(validation);

@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { INewCompanyDto } from './types/newCompany.dto';
+import { NewCompanyDto } from './dtos/NewCompany.dto';
 import { CompanyEntity } from './entities/Company.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,7 +19,7 @@ export class CompaniesService {
     private readonly _companiesRepo: Repository<CompanyEntity>,
   ) {}
 
-  async createCompany(dto: INewCompanyDto): Promise<CompanyEntity> {
+  async createCompany(dto: NewCompanyDto): Promise<CompanyEntity> {
     if (!dto) throw new BadRequestException();
     if ((await validate(dto)).length) throw new BadRequestException();
 

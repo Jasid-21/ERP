@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { IUser } from './types/User.interface';
-import { ICreateUserDto } from './types/CreateUserDto';
-import { ILoginUser } from './types/LoginUser.interface';
+import { CreateUserDto } from './dtos/CreateUserDto';
+import { LoginUserDto } from './dtos/LoginUser.interface';
 import { JwtAuthGuard } from '../Auth/AuthGuard';
 
 @Controller('users')
@@ -15,12 +15,12 @@ export class UsersController {
   }
 
   @Post()
-  async createUser(@Body() dto: ICreateUserDto): Promise<IUser> {
+  async createUser(@Body() dto: CreateUserDto): Promise<IUser> {
     return this._usersService.createUser(dto);
   }
 
   @Post('login')
-  async loginUser(@Body() dto: ILoginUser): Promise<string> {
+  async loginUser(@Body() dto: LoginUserDto): Promise<string> {
     return this._usersService.loginUser(dto);
   }
 

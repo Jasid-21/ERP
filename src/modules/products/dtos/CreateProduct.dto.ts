@@ -1,7 +1,7 @@
 import { IsEnum, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
 import { productType } from '../types/productTypes';
 
-export class ICreateProductDto {
+export class CreateProductDto {
   @IsString()
   serial!: string;
 
