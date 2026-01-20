@@ -8,7 +8,7 @@ import { WarehauseEntity } from './entities/Warehause.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateWarehauseDto } from './dtos/createWarehause.dto';
-import { MatchObj, MatchProperty } from 'src/utils/MatchObj.class';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class WarehousesService {
@@ -28,12 +28,7 @@ export class WarehousesService {
 
   async createWarehause(dto: CreateWarehauseDto): Promise<WarehauseEntity> {
     if (!dto) throw new BadRequestException();
-    const comparator = new MatchObj(
-      new MatchProperty('name', ['string']),
-      new MatchProperty('description', ['string']),
-      new MatchProperty('companyId', [1]),
-    );
-    if (!comparator.compare(dto)) throw new BadRequestException();
+    if ((await validate(dto)).length) throw new BadRequestException();
 
     //Verificar si existe un almacén con el mismo nombre para esa empresa.
     const conflicted = await this._warehousesRepo.findOneBy({

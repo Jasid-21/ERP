@@ -5,17 +5,17 @@ import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'companies' })
 export class CompanyEntity extends AuditedEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  nit: string;
+  nit!: string;
 
   @Column()
-  rut: string;
+  rut!: string;
 
   @ManyToMany(() => UserEntity, (user) => user.companies)
-  users: UserEntity[];
+  users!: UserEntity[];
 }

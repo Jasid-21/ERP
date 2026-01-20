@@ -10,12 +10,12 @@ import { UserEntity, userEntityParser } from './entities/User.entity';
 import { Repository } from 'typeorm';
 import { IUser } from './types/User.interface';
 import { ICreateUserDto } from './types/CreateUserDto';
-import { MatchObj, MatchProperty } from 'src/utils/MatchObj.class';
 import * as bcrypt from 'bcrypt';
 import { verifyPasswordRules } from 'src/utils/InputRulesMethods';
 import { ILoginUser } from './types/LoginUser.interface';
 import { JwtServiceCustom } from '../Auth/JwtService';
 import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -39,15 +39,7 @@ export class UsersService {
 
   async createUser(dto: ICreateUserDto): Promise<IUser> {
     if (!dto) throw new BadRequestException();
-
-    const matcher = new MatchObj(
-      new MatchProperty('username', ['string']),
-      new MatchProperty('email', ['string']),
-      new MatchProperty('password', ['string']),
-      new MatchProperty('companyId', [1]),
-    );
-    const match = matcher.compare(dto, true);
-    if (!match) throw new BadRequestException();
+    if ((await validate(dto)).length) throw new BadRequestException();
 
     //Verificar que la contraseña siga las reglas;
     if (!verifyPasswordRules(dto.password))
@@ -82,12 +74,8 @@ export class UsersService {
 
   async loginUser(dto: ILoginUser): Promise<string> {
     if (!dto) throw new BadRequestException();
-
-    const matcher = new MatchObj(
-      new MatchProperty('username', ['string']),
-      new MatchProperty('password', ['string']),
-    );
-    if (!matcher.compare(dto)) throw new BadRequestException();
+    const validation = await validate(dto);
+    if (validation.length) throw new BadRequestException(validation);
 
     const user = await this._usersRepo.findOneBy({ username: dto.username });
     if (!user) throw new UnauthorizedException();

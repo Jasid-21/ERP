@@ -5,12 +5,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { INewCompanyDto } from './types/newCompany.dto';
-import { MatchObj, MatchProperty } from 'src/utils/MatchObj.class';
 import { CompanyEntity } from './entities/Company.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { IUpdateCompanyDto } from './types/UpdateCompany.dto';
 import { removeObjectProperties } from 'src/utils/RemoveObjProperties';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class CompaniesService {
@@ -21,13 +21,7 @@ export class CompaniesService {
 
   async createCompany(dto: INewCompanyDto): Promise<CompanyEntity> {
     if (!dto) throw new BadRequestException();
-
-    const comparator = new MatchObj(
-      new MatchProperty('name', ['string']),
-      new MatchProperty('nit', ['string']),
-      new MatchProperty('rut', ['string']),
-    );
-    if (!comparator.compare(dto, true)) throw new BadRequestException();
+    if ((await validate(dto)).length) throw new BadRequestException();
 
     const found = await this._companiesRepo.findOne({
       where: { nit: dto.nit, rut: dto.rut },
@@ -50,14 +44,7 @@ export class CompaniesService {
 
   async updateCompany(dto: IUpdateCompanyDto): Promise<CompanyEntity> {
     if (!dto) throw new BadRequestException();
-
-    const comparator = new MatchObj(
-      new MatchProperty('id', [1]),
-      new MatchProperty('name', ['string'], false),
-      new MatchProperty('nit', ['string'], false),
-      new MatchProperty('rut', ['string'], false),
-    );
-    if (!comparator.compare(dto, true)) throw new BadRequestException();
+    if ((await validate(dto)).length) throw new BadRequestException();
 
     const company = await this._companiesRepo.findOneBy({ id: dto.id });
     if (!company) throw new NotFoundException();

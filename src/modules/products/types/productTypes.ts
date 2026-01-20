@@ -1,1 +1,4 @@
-export type productType = 'good' | 'service';
+export enum productType {
+  GOOD = 'good',
+  SERVICE = 'service',
+}

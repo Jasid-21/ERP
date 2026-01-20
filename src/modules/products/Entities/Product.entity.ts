@@ -12,39 +12,39 @@ import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
 @Entity()
 export class ProductEntity extends AuditedEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  serial: string;
+  serial!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  type: productType;
+  type!: productType;
 
   @Column({ nullable: true })
-  description: string;
+  description?: string;
 
   @Column({ nullable: true })
-  image: string;
+  image?: string;
 
   @Column({ nullable: true })
-  measurement: number;
+  measurement?: number;
 
   @Column({ name: 'measurement_unit', nullable: true })
-  measurementUnit: string;
+  measurementUnit?: string;
 
   @Column({ name: 'standard_code', nullable: true })
-  standardCode: string;
+  standardCode?: string;
 
   @Column({ name: 'base_price', nullable: true })
-  basePrice: number;
+  basePrice?: number;
 
   @ManyToOne(() => CompanyEntity, { nullable: false, onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'company_id' })
-  company: CompanyEntity;
+  company!: CompanyEntity;
 
   @Column({ name: 'company_id' })
-  companyId: number;
+  companyId!: number;
 }

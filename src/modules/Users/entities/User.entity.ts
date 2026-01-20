@@ -11,19 +11,19 @@ import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  username: string;
+  username!: string;
 
   @Column()
-  email: string;
+  email!: string;
 
   @Column()
-  password: string;
+  password!: string;
 
   @Column({ name: 'is_email_verified' })
-  isEmailVerified: boolean;
+  isEmailVerified!: boolean;
 
   @ManyToMany(() => CompanyEntity, (company) => company.users)
   @JoinTable({
@@ -37,7 +37,7 @@ export class UserEntity {
       referencedColumnName: 'id',
     },
   })
-  companies: CompanyEntity[];
+  companies!: CompanyEntity[];
 }
 
 export function userEntityParser(

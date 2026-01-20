@@ -1,9 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from './Entities/Product.entity';
 import { Repository } from 'typeorm';
 import { ICreateProductDto } from './dtos/CreateProduct.dto';
-import { MatchObj, MatchProperty } from 'src/utils/MatchObj.class';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class ProductsService {
@@ -14,20 +19,22 @@ export class ProductsService {
 
   async createProduct(dto: ICreateProductDto): Promise<ProductEntity> {
     if (!dto) throw new BadRequestException();
-    const comparator = new MatchObj(
-      new MatchProperty('serial', ['string']),
-      new MatchProperty('name', ['string']),
-      new MatchProperty('type', ['string']),
-      new MatchProperty('description', ['string'], false),
-      new MatchProperty('measurement', [1], false),
-      new MatchProperty('measurement_unit', ['string'], false),
-      new MatchProperty('standardCode', ['string'], false),
-      new MatchProperty('basePrice', [1], false),
-      new MatchProperty('companyId', [1]),
-      new MatchProperty('image', ['string'], false),
-    );
-    if (!comparator.compare(dto, true)) throw new BadRequestException();
+    const isValid = await validate(dto);
+    if (isValid.length) throw new BadRequestException();
 
+    const conflicted = await this._productsRepo.findOne({
+      where: { name: dto.name, serial: dto.serial },
+    });
+    if (conflicted) throw new ConflictException();
 
+    try {
+      const rawEntity = this._productsRepo.create(dto);
+      const entity = await this._productsRepo.save(rawEntity);
+
+      return entity;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerErrorException();
+    }
   }
 }

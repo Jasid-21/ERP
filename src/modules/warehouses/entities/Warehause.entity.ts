@@ -11,18 +11,18 @@ import {
 @Entity({ name: 'warehouses' })
 export class WarehauseEntity extends AuditedEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  name: string;
+  name!: string;
 
-  @Column()
-  description: string;
+  @Column({ nullable: true })
+  description?: string;
 
   @ManyToOne(() => CompanyEntity, { nullable: false, onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'company_id' })
-  company: CompanyEntity;
+  company!: CompanyEntity;
 
   @Column({ name: 'company_id' })
-  companyId: number;
+  companyId!: number;
 }

@@ -1,4 +1,9 @@
-export interface ILoginUser {
-  username: string;
-  password: string;
+import { IsString } from 'class-validator';
+
+export class ILoginUser {
+  @IsString()
+  username!: string;
+
+  @IsString()
+  password!: string;
 }

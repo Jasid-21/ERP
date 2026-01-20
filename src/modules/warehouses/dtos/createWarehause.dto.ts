@@ -1,5 +1,13 @@
-export interface CreateWarehauseDto {
-  name: string;
+import { IsInt, IsOptional, IsString } from 'class-validator';
+
+export class CreateWarehauseDto {
+  @IsString()
+  name!: string;
+
+  @IsString()
+  @IsOptional()
   description?: string;
-  companyId?: number;
+
+  @IsInt()
+  companyId!: number;
 }
