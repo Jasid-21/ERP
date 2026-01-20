@@ -3,12 +3,14 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from './Entities/Product.entity';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { validate } from 'class-validator';
+import { UpdateProductDto } from './dtos/UpdateProduct';
 
 @Injectable()
 export class ProductsService {
@@ -16,6 +18,15 @@ export class ProductsService {
     @InjectRepository(ProductEntity)
     private readonly _productsRepo: Repository<ProductEntity>,
   ) {}
+
+  async getProductById(id: number): Promise<ProductEntity> {
+    if (!id || typeof id != 'number') throw new BadRequestException();
+
+    const product = await this._productsRepo.findOneBy({ id });
+    if (!product) throw new NotFoundException();
+
+    return product;
+  }
 
   async createProduct(dto: CreateProductDto): Promise<ProductEntity> {
     if (!dto) throw new BadRequestException();
@@ -36,5 +47,29 @@ export class ProductsService {
       console.error(err);
       throw new InternalServerErrorException();
     }
+  }
+
+  async updateProduct(dto: UpdateProductDto): Promise<ProductEntity> {
+    if (!dto) throw new BadRequestException();
+    if ((await validate(dto)).length) throw new BadRequestException();
+
+    const product = await this._productsRepo.findOneBy({ id: dto.id });
+    if (!product) throw new NotFoundException();
+
+    Object.assign(product, dto);
+    try {
+      const updatedProduct = await this._productsRepo.save(product);
+      return updatedProduct;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async deleteProduct(id: number): Promise<void> {
+    if (!id) throw new BadRequestException();
+
+    const result = await this._productsRepo.delete({ id });
+    if (result.affected === 0) throw new NotFoundException();
   }
 }

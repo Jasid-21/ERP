@@ -1,7 +1,10 @@
 import { IsEnum, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
 import { productType } from '../types/productTypes';
 
-export class CreateProductDto {
+export class UpdateProductDto {
+  @IsInt()
+  id!: number;
+
   @IsString()
   serial!: string;
 
@@ -30,9 +33,6 @@ export class CreateProductDto {
   @IsNumber()
   @IsOptional()
   basePrice?: number;
-
-  @IsInt()
-  companyId!: number;
 
   @IsString()
   @IsOptional()
