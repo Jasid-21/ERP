@@ -471,3 +471,11 @@ create table box_movement (
 	created_by INT NOT NULL REFERENCES users(id),
 	updated_by INT REFERENCES users(id)
 );
+
+alter table inventory_movements rename column type to movement_type;
+alter table products drop constraint inventory_movements_type_check;
+
+alter table inventory_movements drop constraint inventory_movements_type_check;
+ALTER TABLE inventory_movements
+ADD CONSTRAINT inventory_movements_type_check
+CHECK (movement_type IN ('income', 'outcome', 'adjustment'));

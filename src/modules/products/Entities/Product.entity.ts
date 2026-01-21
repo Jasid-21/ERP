@@ -9,7 +9,7 @@ import {
 import { productType } from '../types/productTypes';
 import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
 
-@Entity()
+@Entity({ name: 'products' })
 export class ProductEntity extends AuditedEntity {
   @PrimaryGeneratedColumn()
   id!: number;
