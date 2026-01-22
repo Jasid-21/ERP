@@ -1,4 +1,4 @@
-import { AuditedEntity } from 'src/utils/AuditedEntity.class';
+import { AuditedEntity } from 'src/commons/classes/AuditedEntity.class';
 import {
   Column,
   Entity,
@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { productType } from '../types/productTypes';
-import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
+import { CompanyEntity } from 'src/modules/companies/entities/Company.entity';
 
 @Entity({ name: 'products' })
 export class ProductEntity extends AuditedEntity {

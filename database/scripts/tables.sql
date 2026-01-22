@@ -172,7 +172,7 @@ CHECK (type IN ('good', 'service'));
 
 create table stock (
 	id int not null generated always as identity primary key,
-	product_id int null references products(id),
+	product_id int not null references products(id),
 	amount int not null,
 	warehouse_id int not null references warehouses(id),
 	alert_minimum int,
@@ -180,7 +180,9 @@ create table stock (
 	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 	updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 	created_by INT NOT NULL REFERENCES users(id),
-	updated_by INT REFERENCES users(id)
+	updated_by INT REFERENCES users(id),
+	
+	unique(product_id, warehouse_id)
 );
 
 create table catalog (

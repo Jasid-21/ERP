@@ -6,16 +6,17 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity, userEntityParser } from './entities/User.entity';
+import { UserEntity } from './entities/User.entity';
 import { Repository } from 'typeorm';
 import { IUser } from './types/User.interface';
 import { CreateUserDto } from './dtos/CreateUserDto';
 import * as bcrypt from 'bcrypt';
-import { verifyPasswordRules } from 'src/utils/InputRulesMethods';
+import { verifyPasswordRules } from 'src/commons/utils/InputRulesMethods';
 import { LoginUserDto } from './dtos/LoginUser.interface';
 import { JwtServiceCustom } from '../Auth/JwtService';
-import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
+import { CompanyEntity } from 'src/modules/companies/entities/Company.entity';
 import { validate } from 'class-validator';
+import { userEntityParser } from './utils/userEntityParser';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +32,7 @@ export class UsersService {
   async getUserById(id: number): Promise<IUser> {
     if (!id || isNaN(Number(id)) || id <= 0) throw new BadRequestException();
 
-    const user: UserEntity | null = await this._usersRepo.findOneBy({ id });
+    const user = await this._usersRepo.findOneBy({ id });
     if (!user) throw new NotFoundException();
 
     return userEntityParser(user);
@@ -68,7 +69,7 @@ export class UsersService {
       return parsedUser;
     } catch (err) {
       console.error(err);
-      throw new BadRequestException();
+      throw err;
     }
   }
 

@@ -4,7 +4,7 @@ import {
   InsertEvent,
   UpdateEvent,
 } from 'typeorm';
-import { AuditedEntity } from 'src/utils/AuditedEntity.class';
+import { AuditedEntity } from 'src/commons/classes/AuditedEntity.class';
 import { requestContext } from 'src/RequestContext/RequestContext';
 
 @EventSubscriber()
@@ -21,10 +21,11 @@ export class AuditSubscriber
 
   beforeUpdate(event: UpdateEvent<AuditedEntity>) {
     const ctx = requestContext.getStore();
+    console.log(ctx);
     if (!ctx?.userId) return;
 
     if (event.entity) {
-      event.entity.updatedById = ctx.userId;
+      event.entity.updatedBy = ctx.userId;
     }
   }
 }

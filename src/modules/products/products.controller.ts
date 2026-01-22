@@ -20,7 +20,7 @@ export class ProductsController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   getProductById(@Param('id') id: number) {
-    return this.productsService.getProductById(id);
+    return this.productsService.findById(id);
   }
 
   @Post()
@@ -29,10 +29,10 @@ export class ProductsController {
     return this.productsService.createProduct(dto);
   }
 
-  @Put()
+  @Put(':id')
   @UseGuards(JwtAuthGuard)
-  updateProduct(@Body() dto: UpdateProductDto) {
-    return this.productsService.updateProduct(dto);
+  updateProduct(@Body() dto: UpdateProductDto, @Param('id') id: number) {
+    return this.productsService.updateById(id, dto);
   }
 
   @Delete(':id')

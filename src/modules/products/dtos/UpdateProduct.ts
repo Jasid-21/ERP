@@ -1,10 +1,7 @@
-import { IsEnum, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { productType } from '../types/productTypes';
 
 export class UpdateProductDto {
-  @IsInt()
-  id!: number;
-
   @IsString()
   serial!: string;
 

@@ -1,5 +1,5 @@
-import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
-import { AuditedEntity } from 'src/utils/AuditedEntity.class';
+import { CompanyEntity } from 'src/modules/companies/entities/Company.entity';
+import { AuditedEntity } from 'src/commons/classes/AuditedEntity.class';
 import {
   Column,
   Entity,

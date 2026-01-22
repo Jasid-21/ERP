@@ -5,8 +5,7 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { IUser } from '../types/User.interface';
-import { CompanyEntity } from 'src/modules/Companies/entities/Company.entity';
+import { CompanyEntity } from 'src/modules/companies/entities/Company.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -38,16 +37,4 @@ export class UserEntity {
     },
   })
   companies!: CompanyEntity[];
-}
-
-export function userEntityParser(
-  user: UserEntity,
-  includePassword: boolean = false,
-): IUser {
-  return {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    password: includePassword ? user.password : '',
-  };
 }

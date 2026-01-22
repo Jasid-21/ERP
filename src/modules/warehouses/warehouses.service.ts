@@ -9,21 +9,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateWarehauseDto } from './dtos/createWarehause.dto';
 import { validate } from 'class-validator';
+import { BaseService } from 'src/commons/classes/BaseService.service';
 
 @Injectable()
-export class WarehousesService {
+export class WarehousesService extends BaseService<WarehauseEntity> {
   constructor(
     @InjectRepository(WarehauseEntity)
     private readonly _warehousesRepo: Repository<WarehauseEntity>,
-  ) {}
-
-  async getWarehauseById(id: number): Promise<WarehauseEntity> {
-    if (!id || typeof id != 'number') throw new BadRequestException();
-
-    const warehause = await this._warehousesRepo.findOneBy({ id });
-    if (!warehause) throw new NotFoundException();
-
-    return warehause;
+  ) {
+    super(_warehousesRepo);
   }
 
   async createWarehause(dto: CreateWarehauseDto): Promise<WarehauseEntity> {

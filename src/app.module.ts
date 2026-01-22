@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './modules/Users/users.module';
-import { CompaniesModule } from './modules/Companies/companies.module';
+import { UsersModule } from './modules/users/users.module';
+import { CompaniesModule } from './modules/companies/companies.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WarehousesModule } from './modules/warehouses/warehouses.module';
 import { AuditSubscriber } from 'database/subscribers/Audit.subscriber';
 import { ProductsModule } from './modules/products/products.module';
+import { StockModule } from './modules/stock/stock.module';
 
 @Module({
   imports: [
@@ -17,6 +18,9 @@ import { ProductsModule } from './modules/products/products.module';
 
     UsersModule,
     CompaniesModule,
+    WarehousesModule,
+    ProductsModule,
+    StockModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -32,8 +36,6 @@ import { ProductsModule } from './modules/products/products.module';
         subscribers: [AuditSubscriber],
       }),
     }),
-    WarehousesModule,
-    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
