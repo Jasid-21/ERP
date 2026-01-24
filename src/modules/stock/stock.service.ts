@@ -8,7 +8,7 @@ import { StockEntity } from './entities/Stock.entity';
 import { Repository } from 'typeorm';
 import { CreateStockDto } from './dtos/CreateStock.dto';
 import { ProductEntity } from '../products/entities/Product.entity';
-import { WarehauseEntity } from '../warehouses/entities/Warehause.entity';
+import { WarehouseEntity } from '../warehouses/entities/Warehouse.entity';
 import { BaseService } from 'src/commons/classes/BaseService.service';
 
 @Injectable()
@@ -52,7 +52,7 @@ export class StockService extends BaseService<StockEntity> {
     return stocks.map((s) => s.product);
   }
 
-  async getWarehousesByProduct(productId: number): Promise<WarehauseEntity[]> {
+  async getWarehousesByProduct(productId: number): Promise<WarehouseEntity[]> {
     if (!productId || typeof productId != 'number')
       throw new BadRequestException();
 

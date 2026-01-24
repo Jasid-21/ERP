@@ -481,3 +481,26 @@ alter table inventory_movements drop constraint inventory_movements_type_check;
 ALTER TABLE inventory_movements
 ADD CONSTRAINT inventory_movements_type_check
 CHECK (movement_type IN ('income', 'outcome', 'adjustment'));
+
+alter table stock add column company_id int not null references companies(id) default 3;
+alter table stock alter column company_id drop default;
+
+create table headquarters (
+	id int not null generated always as identity primary key,
+	name varchar(50) not null,
+	location varchar(100),
+	status varchar(10) not null check (status in ('opened', 'closed')),
+	type varchar(10) not null check (type in ('shop', 'branch', 'online')),
+	company_id int not null references companies(id),
+	
+	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+	created_by INT NOT NULL REFERENCES users(id),
+	updated_by INT REFERENCES users(id)
+);
+
+alter table catalog add column headquarter_id int not null references headquarters(id);
+alter table budgets add column headquarter_id int not null references  headquarters(id);
+alter table sales add column headquarter_id int not null references  headquarters(id);
+alter table headquarters add column default_warehouse_id int not null references warehouses(id);
+alter table headquarters alter column default_warehouse_id drop not null;

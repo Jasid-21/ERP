@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { WarehauseEntity } from './entities/Warehause.entity';
+import { WarehouseEntity } from './entities/Warehouse.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateWarehauseDto } from './dtos/createWarehause.dto';
@@ -12,15 +12,15 @@ import { validate } from 'class-validator';
 import { BaseService } from 'src/commons/classes/BaseService.service';
 
 @Injectable()
-export class WarehousesService extends BaseService<WarehauseEntity> {
+export class WarehousesService extends BaseService<WarehouseEntity> {
   constructor(
-    @InjectRepository(WarehauseEntity)
-    private readonly _warehousesRepo: Repository<WarehauseEntity>,
+    @InjectRepository(WarehouseEntity)
+    private readonly _warehousesRepo: Repository<WarehouseEntity>,
   ) {
     super(_warehousesRepo);
   }
 
-  async createWarehause(dto: CreateWarehauseDto): Promise<WarehauseEntity> {
+  async createWarehause(dto: CreateWarehauseDto): Promise<WarehouseEntity> {
     if (!dto) throw new BadRequestException();
     if ((await validate(dto)).length) throw new BadRequestException();
 

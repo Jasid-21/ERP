@@ -9,6 +9,11 @@ import { WarehousesModule } from './modules/warehouses/warehouses.module';
 import { AuditSubscriber } from 'database/subscribers/Audit.subscriber';
 import { ProductsModule } from './modules/products/products.module';
 import { StockModule } from './modules/stock/stock.module';
+import { HeadquartersModule } from './modules/headquarters/headquarters.module';
+import { CatalogsModule } from './modules/catalogs/catalogs.module';
+import { InventoryMovementsModule } from './modules/inventory-movements/inventory-movements.module';
+import { SalesModule } from './modules/sales/sales.module';
+import { PurchasesModule } from './modules/purchases/purchases.module';
 
 @Module({
   imports: [
@@ -36,6 +41,11 @@ import { StockModule } from './modules/stock/stock.module';
         subscribers: [AuditSubscriber],
       }),
     }),
+    HeadquartersModule,
+    CatalogsModule,
+    InventoryMovementsModule,
+    SalesModule,
+    PurchasesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

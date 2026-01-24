@@ -1,5 +1,5 @@
 import { ProductEntity } from 'src/modules/products/entities/Product.entity';
-import { WarehauseEntity } from 'src/modules/warehouses/entities/Warehause.entity';
+import { WarehouseEntity } from 'src/modules/warehouses/entities/Warehouse.entity';
 import { AuditedEntity } from 'src/commons/classes/AuditedEntity.class';
 import {
   Column,
@@ -23,9 +23,9 @@ export class StockEntity extends AuditedEntity {
   @Column({ name: 'product_id' })
   productId!: number;
 
-  @ManyToOne(() => WarehauseEntity, { nullable: false, onDelete: 'RESTRICT' })
+  @ManyToOne(() => WarehouseEntity, { nullable: false, onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'warehouse_id' })
-  warehouse!: WarehauseEntity;
+  warehouse!: WarehouseEntity;
 
   @Column({ name: 'warehouse_id' })
   warehouseId!: number;

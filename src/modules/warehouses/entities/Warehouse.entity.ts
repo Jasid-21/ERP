@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'warehouses' })
-export class WarehauseEntity extends AuditedEntity {
+export class WarehouseEntity extends AuditedEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
